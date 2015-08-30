@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>AngularJS To Do</title>
+        <link rel="stylesheet" href="styles/app.css">
+    </head>
+    <body>
+        <section ng-app="todosApp" ng-controller="TodosController" id="todoapp">
+            <header id="header">
+                <h1>{{name}} todos</h1>
+                <input ng-keyup="insertTodo($event)" id="new-todo" placeholder="What needs to be done?" autofocus>
+            </header>
+            <!-- This section should be hidden by default and shown when there are todos -->
+            <section id="main">
+                <input ng-model="allDoneFlag" ng-change="massToggleTodos()" id="toggle-all" type="checkbox">
+                <label for="toggle-all">Mark all as complete</label>
+                <ul id="todo-list">
+                    <!-- These are here just to show the structure of the list items -->
+                    <!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+                    
+                    <li ng-repeat="todo in todos | filter:todoFilter" ng-class="{'completed':todo.done,'editing':todo.editing}">
+                        <div class="view">
+                            <input ng-model="todo.done" ng-change="saveTodo()" class="toggle" type="checkbox">
+                            <label ng-dblclick="setEditing(todo)">{{todo.title}}</label>
+                            <button class="destroy" ng-click="deleteTodo(todo)"></button>
+                        </div>
+                        <input class="edit" value="{{todo.title}}" ng-keyup="updateTodo(todo,$event)">
+                    </li>
+                </ul>
+            </section>
+            <!-- This footer should hidden by default and shown when there are todos -->
+            <footer id="footer">
+                <!-- This should be `0 items left` by default -->
+                <span id="todo-count"><strong>{{getPendingTodos().length}}</strong> item left</span>
+                <!-- Remove this if you don't implement routing -->
+                <ul id="filters">
+                    <li>
+                        <a href="#/" ng-class="{'selected':(state == '')}">All</a>
+                    </li>
+                    <li>
+                        <a href="#/active" ng-class="{'selected':(state == 'active')}">Active</a>
+                    </li>
+                    <li>
+                        <a href="#/completed" ng-class="{'selected':(state == 'completed')}">Completed</a>
+                    </li>
+                </ul>
+                <a ng-click="clearAllTodos()" id="clear-completed"></a>
+                <!-- Hidden if no completed items are left ↓ -->
+                
+            </footer>
+        </section>
+        <footer id="info">
+            <p>Double-click to edit a todo</p>
+        </footer>
+
+        <script src="libraries/angular.min.js"></script>
+        <script src="libraries/angular-local-storage.min.js"></script>
+        <script src="libraries/firebase.js"></script>
+        <script src="libraries/angularfire.min.js"></script>
+        <script src="scripts/app.js"></script>
+    </body>
+</html>
